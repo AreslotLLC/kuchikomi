@@ -1,10 +1,10 @@
 import { ClientConfig } from '@/types';
 
 export const clients: Record<string, ClientConfig> = {
-  'tax-office-a': {
-    id: 'tax-office-a',
-    name: '税理士法人A',
-    googleMapLink: 'https://maps.app.goo.gl/example1',
+  'yokoyama-tax-office': {
+    id: 'yokoyama-tax-office',
+    name: '横山千夏税理士事務所',
+    googleMapLink: 'https://www.google.com/maps/search/?api=1&query=%E6%A8%AA%E5%B1%B1%E5%8D%83%E5%A4%8F%E7%A8%8E%E7%90%86%E5%A3%AB%E4%BA%8B%E5%8B%99%E6%89%80',
     webhookUrl: 'https://script.google.com/macros/s/example-webhook-a/exec',
     themeColor: 'emerald',
     questions: [

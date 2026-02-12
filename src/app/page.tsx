@@ -12,10 +12,10 @@ export default function Home() {
                     <p className="text-sm text-gray-400 font-medium">デモ用リンク:</p>
                     <div className="flex flex-col gap-2">
                         <Link
-                            href="/tax-office-a"
+                            href="/yokoyama-tax-office"
                             className="text-emerald-600 hover:text-emerald-700 font-bold underline"
                         >
-                            税理士法人A
+                            横山千夏税理士事務所
                         </Link>
                         <Link
                             href="/dental-clinic-b"
