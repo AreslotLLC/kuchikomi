@@ -7,35 +7,38 @@ const openai = new OpenAI({
 
 export async function POST(req: NextRequest) {
     try {
-        const { clientName, answers } = await req.json();
+        const { clientName, answers, age, gender } = await req.json();
 
         if (!clientName || !answers) {
             return NextResponse.json({ error: 'Invalid request' }, { status: 400 });
         }
 
-        // AIが使用する回答のみをフィルタリング
         const answerSummary = Object.entries(answers)
             .map(([label, value]) => `${label}: ${Array.isArray(value) ? value.join(', ') : value}`)
             .join('\n');
 
-        const prompt = `あなたは ${clientName} の利用者です。
-以下の利用者の感想を元に、Googleマップに投稿するための自然で、丁寧で、好意的な口コミ文章を作成してください。
-文章は150文字程度で、読んだ人がその場所へ行きたくなるような内容にしてください。
+        const prompt = `あなたは ${clientName} の利用者（性別：${gender || '未回答'}、年齢層：${age || '未回答'}）です。
+以下の利用者の感想を元に、Googleマップに投稿するための自然な口コミ文章を作成してください。
+
+【作成のガイドライン】
+- 回答者の属性（${age}、${gender}）に合わせた、ごく一般的で違和感のない「ですます」調で書いてください。
+- 丁寧すぎたり、事務的すぎたりせず、利用者が自分の言葉で書いたような自然なトーンにしてください。
+- 文章は100〜150文字程度。
+- 嘘は書かず、提供された感想（以下の【利用者の感想】）の内容のみを使用してください。
 
 【利用者の感想】
 ${answerSummary}
 
 【制約】
-- 「私は〜」という表現は控えめにし、自然な感想として書く
-- 敬体（です・ます調）で書く
-- 嘘は書かない（提供された情報のみを使用する）`;
+- 「私は〜」という表現は最小限に。
+- 広告らしさを避け、誠実で具体的な感想に。`;
 
         const response = await openai.chat.completions.create({
             model: 'gpt-4o-mini',
             messages: [
                 {
                     role: 'system',
-                    content: 'あなたは親切で正直な口コミ投稿者です。',
+                    content: 'あなたは実在する利用者の視点で、自然な日本語の口コミを書くアシスタントです。',
                 },
                 {
                     role: 'user',
@@ -43,7 +46,7 @@ ${answerSummary}
                 },
             ],
             temperature: 0.7,
-            max_tokens: 300,
+            max_tokens: 400,
         });
 
         const reviewText = response.choices[0].message.content || '';

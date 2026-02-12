@@ -59,6 +59,8 @@ export default function ClientPage() {
                     body: JSON.stringify({
                         clientName: client.name,
                         answers: aiAnswers,
+                        age: answers.age,
+                        gender: answers.gender,
                     }),
                 });
 

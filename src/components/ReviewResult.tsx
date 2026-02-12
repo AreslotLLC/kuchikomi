@@ -107,10 +107,10 @@ export function ReviewResult({ reviewText, googleMapLink }: ReviewResultProps) {
                 </div>
             </div>
 
-            <div className="bg-[var(--primary-light)] border border-[var(--primary-light)] rounded-3xl p-6 flex items-start gap-4">
-                <Sparkles className="w-6 h-6 text-[var(--primary)] flex-shrink-0 animate-pulse" />
-                <p className="text-sm text-[var(--primary)] font-bold leading-relaxed">
-                    コピーした文章をGoogleマップの投稿画面にペーストしてください。皆様の温かい口コミが、私たちの大きな励みになります！
+            <div className="bg-gray-50 border border-gray-100 rounded-2xl p-4 flex items-start gap-3">
+                <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0" />
+                <p className="text-xs text-gray-500 font-medium leading-relaxed">
+                    コピーした文章を次の画面でペーストしてください。皆様の温かい口コミが、私たちの大きな励みになります。
                 </p>
             </div>
         </motion.div>
