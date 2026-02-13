@@ -46,42 +46,4 @@ export const clients: Record<string, ClientConfig> = {
       },
     ],
   },
-  'dental-clinic-b': {
-    id: 'dental-clinic-b',
-    name: 'B歯科クリニック',
-    googleMapLink: 'https://maps.app.goo.gl/example2',
-    themeColor: 'blue',
-    questions: [
-      {
-        id: 'rating',
-        type: 'rating',
-        label: '診察・治療の満足度を教えてください',
-        aiUse: false,
-        required: true,
-      },
-      {
-        id: 'pain',
-        type: 'boolean',
-        label: '痛みへの配慮は感じられましたか？',
-        aiUse: true,
-        required: true,
-      },
-      {
-        id: 'explanation',
-        type: 'tags',
-        label: '説明のわかりやすさはいかがでしたか？',
-        options: ['非常にわかりやすい', 'わかりやすい', '普通', '不十分'],
-        multiple: false,
-        aiUse: true,
-        required: true,
-      },
-      {
-        id: 'comments',
-        type: 'text',
-        label: 'その他、気になった点があれば教えてください',
-        aiUse: true,
-        required: false,
-      },
-    ],
-  },
 };
