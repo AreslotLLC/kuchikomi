@@ -55,10 +55,19 @@ ${answerSummary}
 
         return NextResponse.json({ reviewText });
     } catch (error: any) {
-        console.error('OpenAI Error Message:', error.message);
+        console.error('OpenAI Interface Error:', error);
+        
+        // APIキーが設定されていない場合の明確なメッセージ
+        if (!process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === 'your_openai_api_key_here') {
+            return NextResponse.json({
+                error: 'Configuration Error',
+                details: 'OpenAI APIキーが設定されていません。.env.localを確認してください。'
+            }, { status: 500 });
+        }
+
         return NextResponse.json({
-            error: 'Internal Server Error',
-            details: error.message
+            error: 'AI Generation Failed',
+            details: error.message || '予期せぬエラーが発生しました。'
         }, { status: 500 });
     }
 }

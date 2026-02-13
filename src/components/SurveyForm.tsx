@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ClientConfig } from '@/types';
+import { ClientConfig, Question } from '@/types';
 import { StarRating } from './StarRating';
 import { cn } from '@/lib/utils';
 import { Loader2, ChevronRight, Check } from 'lucide-react';
@@ -20,10 +20,16 @@ export function SurveyForm({ client, onSubmit, isSubmitting }: SurveyFormProps) 
         setAnswers((prev) => ({ ...prev, rating: value }));
     };
 
-    const handleTagToggle = (questionId: string, tag: string) => {
+    const handleTagToggle = (questionId: string, tag: string, maxSelections?: number) => {
         setAnswers((prev) => {
             const currentTags = prev[questionId] || [];
-            const nextTags = currentTags.includes(tag)
+            const isSelected = currentTags.includes(tag);
+
+            if (!isSelected && maxSelections && currentTags.length >= maxSelections) {
+                return prev;
+            }
+
+            const nextTags = isSelected
                 ? currentTags.filter((t: string) => t !== tag)
                 : [...currentTags, tag];
             return { ...prev, [questionId]: nextTags };
@@ -48,18 +54,18 @@ export function SurveyForm({ client, onSubmit, isSubmitting }: SurveyFormProps) 
     };
 
     // 共通の質問を定義
-    const commonQuestions = [
+    const commonQuestions: Question[] = [
         {
             id: 'gender',
             label: '性別を教えてください',
-            type: 'tags' as const,
+            type: 'tags',
             options: ['男性', '女性', 'その他・回答を控える'],
             aiUse: false,
         },
         {
             id: 'age',
             label: '年齢層を教えてください',
-            type: 'tags' as const,
+            type: 'tags',
             options: ['20代未満', '20〜30代', '40〜50代', '60代以上'],
             aiUse: false,
         },
@@ -72,16 +78,19 @@ export function SurveyForm({ client, onSubmit, isSubmitting }: SurveyFormProps) 
     const filledQuestions = allQuestions.filter(q => {
         const val = answers[q.id];
         if (Array.isArray(val)) return val.length > 0;
+        // ratingは0より大きい場合に回答済みとする
+        if (q.type === 'rating') return (val || 0) > 0;
         return val !== undefined && val !== '';
     }).length;
     const progress = (filledQuestions / totalQuestions) * 100;
+    const isAllFilled = filledQuestions === totalQuestions;
 
     return (
         <div className="space-y-8">
             {/* Progress Bar */}
             <div className="space-y-2">
                 <div className="flex justify-between text-xs font-bold text-gray-400 uppercase tracking-widest">
-                    <span>Progress</span>
+                    <span>回答状況</span>
                     <span>{Math.round(progress)}%</span>
                 </div>
                 <div className="h-1.5 w-full bg-gray-100 rounded-full overflow-hidden">
@@ -124,36 +133,39 @@ export function SurveyForm({ client, onSubmit, isSubmitting }: SurveyFormProps) 
 
                             {q.type === 'tags' && q.options && (
                                 <div className="flex flex-wrap gap-3">
-                                    {q.options.map((option) => {
-                                        const val = answers[q.id];
-                                        const isSelected = q.id === 'gender' || q.id === 'age'
-                                            ? val === option
-                                            : (val || []).includes(option);
+                                            {q.options.map((option: string) => {
+                                                const val = answers[q.id];
+                                                const isSelected = q.id === 'gender' || q.id === 'age'
+                                                    ? val === option
+                                                    : (val || []).includes(option);
 
-                                        return (
-                                            <motion.button
-                                                key={option}
-                                                type="button"
-                                                whileTap={{ scale: 0.95 }}
-                                                onClick={() => {
-                                                    if (q.id === 'gender' || q.id === 'age') {
-                                                        setAnswers(prev => ({ ...prev, [q.id]: option }));
-                                                    } else {
-                                                        handleTagToggle(q.id, option);
-                                                    }
-                                                }}
-                                                className={cn(
-                                                    "px-6 py-3 rounded-2xl border-2 transition-all text-sm font-bold flex items-center gap-2",
-                                                    isSelected
-                                                        ? "bg-[var(--primary)] border-[var(--primary)] text-white shadow-lg shadow-[var(--primary)]/20"
-                                                        : "bg-white border-gray-100 text-gray-500 hover:border-gray-200"
-                                                )}
-                                            >
-                                                {isSelected && <Check className="w-4 h-4" />}
-                                                {option}
-                                            </motion.button>
-                                        );
-                                    })}
+                                                const isLimitReached = !isSelected && q.maxSelections && (val || []).length >= q.maxSelections;
+
+                                                return (
+                                                    <motion.button
+                                                        key={option}
+                                                        type="button"
+                                                        whileTap={isLimitReached ? {} : { scale: 0.95 }}
+                                                        onClick={() => {
+                                                            if (q.id === 'gender' || q.id === 'age') {
+                                                                setAnswers(prev => ({ ...prev, [q.id]: option }));
+                                                            } else {
+                                                                handleTagToggle(q.id, option, q.maxSelections);
+                                                            }
+                                                        }}
+                                                        className={cn(
+                                                            "px-6 py-3 rounded-2xl border-2 transition-all text-sm font-bold flex items-center gap-2",
+                                                            isSelected
+                                                                ? "bg-[var(--primary)] border-[var(--primary)] text-white shadow-lg shadow-[var(--primary)]/20"
+                                                                : "bg-white border-gray-100 text-gray-500 hover:border-gray-200",
+                                                            isLimitReached && "opacity-40 cursor-not-allowed grayscale-[0.5]"
+                                                        )}
+                                                    >
+                                                        {isSelected && <Check className="w-4 h-4" />}
+                                                        {option}
+                                                    </motion.button>
+                                                );
+                                            })}
                                 </div>
                             )}
 
@@ -199,12 +211,12 @@ export function SurveyForm({ client, onSubmit, isSubmitting }: SurveyFormProps) 
 
                 <motion.button
                     type="submit"
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || !isAllFilled}
                     whileTap={{ scale: 0.98 }}
                     className={cn(
                         "w-full py-5 rounded-3xl text-white font-black text-xl shadow-2xl transition-all flex items-center justify-center gap-3 border-b-4 active:border-b-0",
                         "bg-[var(--primary)] border-[var(--primary-hover)] shadow-[var(--primary)]/30",
-                        "disabled:opacity-50 disabled:grayscale disabled:cursor-not-allowed"
+                        (isSubmitting || !isAllFilled) && "opacity-50 grayscale cursor-not-allowed border-gray-400 shadow-none"
                     )}
                 >
                     {isSubmitting ? (

@@ -6,6 +6,7 @@ export interface Question {
     label: string;
     options?: string[];
     aiUse: boolean;
+    maxSelections?: number;
 }
 
 export interface ClientColorTheme {

@@ -14,17 +14,22 @@ export const clients: Record<string, ClientConfig> = {
         aiUse: false,
       },
       {
-        id: 'atmosphere',
+        id: 'request_type',
         type: 'tags',
-        label: '事務所の雰囲気はいかがでしたか？',
-        options: ['清潔', '落ち着いている', '活気がある', '入りやすい'],
+        label: '相談（依頼）内容を教えてください',
+        options: ['相続関連', '法人顧問', '個人顧問', '経理関連', '不動産関連'],
         aiUse: true,
       },
       {
-        id: 'staff',
+        id: 'atmosphere',
         type: 'tags',
-        label: '担当者の対応はいかがでしたか？',
-        options: ['丁寧', 'スピーディー', '親身', '専門的'],
+        label: '事務所の雰囲気や対応はいかがでしたか？（上位3つを選択）',
+        options: [
+          '清潔', '落ち着いている', '丁寧な対応', '話しやすい', '女性でも安心',
+          '専門的', '説明が丁寧', '親身な対応', 'スピーディー', 'おすすめできる',
+          '信頼できる', 'アットホーム', '誠実な対応', 'プライバシーへの配慮', '雰囲気が明るい'
+        ],
+        maxSelections: 3,
         aiUse: true,
       },
       {
