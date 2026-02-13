@@ -5,7 +5,6 @@ export const clients: Record<string, ClientConfig> = {
     id: 'yokoyama-tax-office',
     name: '横山千夏税理士事務所',
     googleMapLink: 'https://search.google.com/local/writereview?placeid=ChIJG0JfqSk6AWARwU93HJBPuk8',
-    webhookUrl: 'https://script.google.com/macros/s/example-webhook-a/exec',
     themeColor: 'emerald',
     questions: [
       {
@@ -40,7 +39,6 @@ export const clients: Record<string, ClientConfig> = {
     id: 'dental-clinic-b',
     name: 'B歯科クリニック',
     googleMapLink: 'https://maps.app.goo.gl/example2',
-    webhookUrl: 'https://script.google.com/macros/s/example-webhook-b/exec',
     themeColor: 'blue',
     questions: [
       {

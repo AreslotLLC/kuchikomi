@@ -27,17 +27,6 @@ export default function ClientPage() {
         setIsSubmitting(true);
 
         try {
-            // 1. GAS Webhookへ送信 (非同期)
-            fetch(client.webhookUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    clientId: client.id,
-                    timestamp: new Date().toISOString(),
-                    answers,
-                }),
-            }).catch(err => console.error('GAS Webhook Error:', err));
-
             const rating = answers.rating || 0;
 
             if (rating <= 3) {
@@ -64,7 +53,10 @@ export default function ClientPage() {
                     }),
                 });
 
-                if (!res.ok) throw new Error('AI generation failed');
+                if (!res.ok) {
+                    const errorData = await res.json().catch(() => ({}));
+                    throw new Error(errorData.details || 'AI generation failed');
+                }
 
                 const data = await res.json();
                 setReviewText(data.reviewText);

@@ -19,7 +19,6 @@ export interface ClientConfig {
     id: string;
     name: string;
     googleMapLink: string;
-    webhookUrl: string;
     themeColor: 'emerald' | 'blue' | 'rose' | 'amber' | 'indigo';
     questions: Question[];
 }

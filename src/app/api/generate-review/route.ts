@@ -5,6 +5,8 @@ const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
 });
 
+console.log('OpenAI Key Status:', process.env.OPENAI_API_KEY ? `Present (Starts with ${process.env.OPENAI_API_KEY.substring(0, 10)}...)` : 'Missing');
+
 export async function POST(req: NextRequest) {
     try {
         const { clientName, answers, age, gender } = await req.json();
@@ -52,8 +54,11 @@ ${answerSummary}
         const reviewText = response.choices[0].message.content || '';
 
         return NextResponse.json({ reviewText });
-    } catch (error) {
-        console.error('OpenAI API Error:', error);
-        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    } catch (error: any) {
+        console.error('OpenAI Error Message:', error.message);
+        return NextResponse.json({
+            error: 'Internal Server Error',
+            details: error.message
+        }, { status: 500 });
     }
 }
