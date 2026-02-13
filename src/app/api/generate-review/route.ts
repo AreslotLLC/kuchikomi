@@ -1,17 +1,31 @@
 import { OpenAI } from 'openai';
 import { NextRequest, NextResponse } from 'next/server';
 
-const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-});
-
-console.log('OpenAI Key Status:', process.env.OPENAI_API_KEY ? `Present (Starts with ${process.env.OPENAI_API_KEY.substring(0, 10)}...)` : 'Missing');
-
 export async function POST(req: NextRequest) {
     try {
-        const { clientName, answers, age, gender } = await req.json();
+        console.log('API Request received');
+        
+        const apiKey = process.env.OPENAI_API_KEY;
+        console.log('OpenAI Key configured:', !!apiKey);
+
+        if (!apiKey || apiKey === 'your_openai_api_key_here') {
+            console.error('OpenAI API Key validation failed');
+            return NextResponse.json({
+                error: 'Configuration Error',
+                details: 'OpenAI APIキーが設定されていません。.env.localを確認してください。'
+            }, { status: 500 });
+        }
+
+        const openai = new OpenAI({
+            apiKey: apiKey,
+        });
+
+        const body = await req.json();
+        console.log('Request body parsed');
+        const { clientName, answers, age, gender } = body;
 
         if (!clientName || !answers) {
+            console.error('Missing required fields');
             return NextResponse.json({ error: 'Invalid request' }, { status: 400 });
         }
 
@@ -35,6 +49,7 @@ ${answerSummary}
 - 「私は〜」という表現は最小限に。
 - 広告らしさを避け、誠実で具体的な感想に。`;
 
+        console.log('Calling OpenAI API...');
         const response = await openai.chat.completions.create({
             model: 'gpt-4o-mini',
             messages: [
@@ -50,6 +65,7 @@ ${answerSummary}
             temperature: 0.7,
             max_tokens: 400,
         });
+        console.log('OpenAI API response received');
 
         const reviewText = response.choices[0].message.content || '';
 
@@ -57,14 +73,6 @@ ${answerSummary}
     } catch (error: any) {
         console.error('OpenAI Interface Error:', error);
         
-        // APIキーが設定されていない場合の明確なメッセージ
-        if (!process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === 'your_openai_api_key_here') {
-            return NextResponse.json({
-                error: 'Configuration Error',
-                details: 'OpenAI APIキーが設定されていません。.env.localを確認してください。'
-            }, { status: 500 });
-        }
-
         return NextResponse.json({
             error: 'AI Generation Failed',
             details: error.message || '予期せぬエラーが発生しました。'
