@@ -7,6 +7,8 @@ export interface Question {
     options?: string[];
     aiUse: boolean;
     maxSelections?: number;
+    required?: boolean;
+    multiple?: boolean;
 }
 
 export interface ClientColorTheme {

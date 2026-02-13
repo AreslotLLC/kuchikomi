@@ -25,44 +25,37 @@ export function ReviewResult({ reviewText, googleMapLink }: ReviewResultProps) {
 
     return (
         <motion.div
-            className="space-y-8"
+            className="space-y-6 sm:space-y-8 px-4 sm:px-0 pb-12 sm:pb-0"
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, ease: "easeOut" }}
         >
-            <div className="relative bg-white rounded-[2.5rem] p-8 shadow-2xl shadow-gray-200/50 border border-gray-50 overflow-hidden">
-                {/* Decoration */}
-                <div className="absolute top-0 right-0 w-32 h-32 bg-[var(--primary-light)] rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl opacity-50" />
-
-                <div className="relative space-y-6">
-                    <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 bg-green-50 rounded-2xl flex items-center justify-center">
-                            <Sparkles className="w-6 h-6 text-green-600 fill-green-600/20" />
-                        </div>
-                        <div>
-                            <h2 className="text-xl font-black text-gray-800 tracking-tight">口コミが準備できました！</h2>
-                            <p className="text-sm text-gray-400 font-medium">AIが最適な文章を作成しました</p>
-                        </div>
+            <div className="relative bg-transparent sm:bg-white rounded-[2rem] sm:rounded-[3rem] p-0 sm:p-10 sm:shadow-[0_20px_60px_rgba(0,0,0,0.08)] sm:border border-white sm:ring-1 ring-gray-50 overflow-visible sm:overflow-hidden">
+                <div className="relative space-y-6 sm:space-y-8">
+                    <div>
+                        <h2 className="text-lg sm:text-2xl font-black text-gray-900 tracking-tight leading-tight">感想をもとに口コミの文章を作成しました</h2>
+                        <p className="text-xs sm:text-sm text-gray-400 font-bold">Googleの口コミに投稿していただければ、励みになります。</p>
                     </div>
 
                     <div className="group relative">
-                        <div className="absolute -inset-1 bg-gradient-to-r from-[var(--primary)] to-green-400 rounded-3xl blur opacity-10 group-hover:opacity-20 transition duration-500" />
+                        <div className="absolute -inset-0.5 bg-gradient-to-br from-[var(--primary)] to-blue-400 rounded-[1.5rem] sm:rounded-[2.5rem] opacity-5 group-hover:opacity-10 transition duration-500" />
                         <textarea
                             readOnly
                             value={reviewText}
-                            className="relative w-full p-6 rounded-[2rem] bg-gray-50/50 border-2 border-transparent focus:border-[var(--primary)] text-gray-800 min-h-[200px] focus:outline-none resize-none leading-relaxed text-base font-medium transition-all"
+                            className="relative w-full p-5 sm:p-8 rounded-[1.5rem] sm:rounded-[2.5rem] bg-gray-50/50 border-2 border-transparent focus:border-[var(--primary)] text-gray-800 min-h-[180px] sm:min-h-[220px] focus:outline-none resize-none leading-relaxed text-sm sm:text-lg font-bold transition-all shadow-inner"
                         />
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-5">
                         <motion.button
                             whileTap={{ scale: 0.98 }}
+                            whileHover={{ y: -2 }}
                             onClick={handleCopy}
                             className={cn(
-                                "py-5 px-6 rounded-2xl font-black flex items-center justify-center gap-3 transition-all border-2",
+                                "py-4 sm:py-5 px-6 sm:px-8 rounded-xl sm:rounded-2xl font-black flex items-center justify-center gap-2 sm:gap-3 transition-all border-2 text-sm sm:text-base",
                                 isCopied
-                                    ? "bg-green-600 border-green-700 text-white shadow-lg shadow-green-200"
-                                    : "bg-white border-gray-100 text-gray-800 hover:border-[var(--primary)] shadow-sm hover:shadow-md"
+                                    ? "bg-green-600 border-green-700 text-white shadow-xl shadow-green-200"
+                                    : "bg-white border-gray-100 text-gray-800 hover:border-[var(--primary)] shadow-md hover:shadow-lg"
                             )}
                         >
                             <AnimatePresence mode="wait">
@@ -74,7 +67,7 @@ export function ReviewResult({ reviewText, googleMapLink }: ReviewResultProps) {
                                         exit={{ opacity: 0, y: -10 }}
                                         className="flex items-center gap-2"
                                     >
-                                        <CheckCircle2 className="w-6 h-6" />
+                                        <CheckCircle2 className="w-5 h-5 sm:w-6 sm:h-6" />
                                         コピー完了
                                     </motion.div>
                                 ) : (
@@ -85,7 +78,7 @@ export function ReviewResult({ reviewText, googleMapLink }: ReviewResultProps) {
                                         exit={{ opacity: 0, y: -10 }}
                                         className="flex items-center gap-2"
                                     >
-                                        <Copy className="w-6 h-6" />
+                                        <Copy className="w-5 h-5 sm:w-6 sm:h-6" />
                                         文章をコピー
                                     </motion.div>
                                 )}
@@ -97,22 +90,30 @@ export function ReviewResult({ reviewText, googleMapLink }: ReviewResultProps) {
                             target="_blank"
                             rel="noopener noreferrer"
                             whileTap={{ scale: 0.98 }}
-                            className="py-5 px-6 rounded-2xl font-black text-white flex items-center justify-center gap-3 shadow-xl transition-all bg-[var(--primary)] border-b-4 border-[var(--primary-hover)] shadow-[var(--primary)]/30 active:border-b-0"
+                            whileHover={{ y: -2 }}
+                            className="py-4 sm:py-5 px-6 sm:px-8 rounded-xl sm:rounded-2xl font-black text-white flex items-center justify-center gap-2 sm:gap-3 shadow-2xl transition-all bg-gradient-to-r from-[var(--primary)] to-[var(--primary-hover)] shadow-[var(--primary)]/30 border-b-4 border-black/10 active:border-b-0 text-sm sm:text-base"
                         >
-                            <MapPin className="w-6 h-6" />
+                            <MapPin className="w-5 h-5 sm:w-6 sm:h-6" />
                             投稿画面へ
-                            <ChevronRight className="w-5 h-5" />
+                            <ChevronRight className="w-4 h-4 sm:w-5 h-5 opacity-50" />
                         </motion.a>
                     </div>
                 </div>
             </div>
 
-            <div className="bg-gray-50 border border-gray-100 rounded-2xl p-4 flex items-start gap-3">
-                <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0" />
-                <p className="text-xs text-gray-500 font-medium leading-relaxed">
+            <motion.div 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+                className="bg-white/50 backdrop-blur-sm border border-gray-100 rounded-[1.5rem] p-4 sm:p-6 flex items-start gap-3 sm:gap-4 shadow-sm"
+            >
+                <div className="w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center flex-shrink-0">
+                    <CheckCircle2 className="w-6 h-6 text-green-600" />
+                </div>
+                <p className="text-sm text-gray-500 font-bold leading-relaxed">
                     コピーした文章を次の画面でペーストしてください。皆様の温かい口コミが、私たちの大きな励みになります。
                 </p>
-            </div>
+            </motion.div>
         </motion.div>
 
     );

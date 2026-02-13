@@ -77,25 +77,31 @@ export default function ClientPage() {
 
     return (
         <main className={cn(
-            "min-h-screen bg-[#fafafa] flex flex-col items-center py-8 px-4 sm:px-6",
+            "min-h-screen bg-[var(--background)] flex flex-col items-center py-6 sm:py-12 px-4 sm:px-6 relative overflow-hidden",
             `theme-${client.themeColor}`
         )}>
+            {/* Background Accent */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-6xl h-full -z-10">
+                <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-[var(--primary-light)] blur-[120px] rounded-full opacity-60" />
+                <div className="absolute bottom-[10%] right-[-10%] w-[30%] h-[30%] bg-[var(--primary-light)] blur-[100px] rounded-full opacity-40" />
+            </div>
+
             {/* Header Container */}
             <motion.div
-                className="w-full max-w-2xl mb-12"
+                className="w-full max-w-2xl mb-8 sm:mb-12 relative"
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
             >
                 <div className="flex flex-col items-center text-center">
-                    <h1 className="text-4xl sm:text-5xl font-black text-gray-900 tracking-tighter mb-4">
+                    <h1 className="text-2xl sm:text-5xl font-black text-gray-900 tracking-tighter mb-4 drop-shadow-sm">
                         {client.name}
                     </h1>
-                    <div className="h-1.5 w-12 bg-[var(--primary)] rounded-full mb-4" />
+                    <div className="h-1 w-10 sm:h-1.5 sm:w-12 bg-gradient-to-r from-[var(--primary)] to-[var(--primary-hover)] rounded-full mb-4 shadow-sm" />
                 </div>
             </motion.div>
 
-            {/* Main Content Card */}
-            <div className="w-full max-w-2xl bg-white rounded-[3rem] shadow-2xl shadow-gray-200/60 p-8 sm:p-12 relative overflow-hidden border border-gray-50">
+            {/* Main Content Card - Simplified for mobile */}
+            <div className="w-full max-w-2xl bg-transparent sm:bg-white/90 sm:backdrop-blur-xl rounded-[2rem] sm:rounded-[3.5rem] sm:shadow-[0_20px_50px_rgba(0,0,0,0.05),0_10px_30px_rgba(0,0,0,0.03)] p-0 sm:p-14 relative overflow-visible sm:overflow-hidden sm:border border-white sm:ring-1 ring-gray-100">
                 <AnimatePresence mode="wait">
                     {step === 'survey' && (
                         <motion.div
@@ -153,22 +159,28 @@ export default function ClientPage() {
                     {step === 'thanks' && (
                         <motion.div
                             key="thanks"
-                            className="py-16 text-center space-y-8"
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
+                            className="py-24 text-center space-y-10"
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: 1, scale: 1 }}
                         >
                             <div className="relative inline-block">
-                                <div className="absolute inset-0 bg-green-400/20 blur-2xl rounded-full scale-150" />
-                                <div className="relative w-24 h-24 bg-green-50 rounded-[2rem] flex items-center justify-center mx-auto">
-                                    <CheckCircle2 className="w-12 h-12 text-green-500" />
+                                <motion.div 
+                                    className="absolute inset-0 bg-green-400/20 blur-3xl rounded-full scale-150"
+                                    animate={{ scale: [1.5, 2, 1.5], opacity: [0.3, 0.6, 0.3] }}
+                                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                                />
+                                <div className="relative w-32 h-32 flex items-center justify-center mx-auto">
+                                    <CheckCircle2 className="w-20 h-20 text-green-500" />
                                 </div>
                             </div>
-                            <div className="space-y-4">
-                                <div className="w-12 h-1.5 bg-[var(--primary)] mx-auto rounded-full" />
-                                <p className="text-xl font-bold text-gray-600 leading-relaxed max-w-sm mx-auto">
-                                    ご協力ありがとうございました。<br />
-                                    いただいたご意見は、今後のサービス向上に大切に活用させていただきます。
-                                </p>
+                            <div className="space-y-6">
+                                <div className="w-16 h-1.5 bg-gradient-to-r from-green-400 to-emerald-500 mx-auto rounded-full shadow-sm" />
+                                <div className="space-y-4">
+                                    <h3 className="text-3xl font-black text-gray-800 tracking-tight">ご協力ありがとうございました。</h3>
+                                    <p className="text-lg font-bold text-gray-500 leading-relaxed max-w-md mx-auto">
+                                        いただいたご意見は、今後のサービス向上に大切に活用させていただきます。
+                                    </p>
+                                </div>
                             </div>
                         </motion.div>
                     )}
@@ -182,7 +194,7 @@ export default function ClientPage() {
                             <div className="mb-10 flex justify-between items-end">
                                 <div>
                                     <h2 className="text-3xl font-black text-gray-800 tracking-tight mb-2">
-                                        結果が届きました
+                                        ご感想ありがとうございます。
                                     </h2>
                                 </div>
                             </div>
@@ -194,15 +206,6 @@ export default function ClientPage() {
                     )}
                 </AnimatePresence>
             </div>
-
-            {/* Trust Badge / Footer */}
-            <footer className="mt-12 text-center space-y-4 max-w-md">
-                <div className="flex items-center justify-center gap-4 opacity-30 grayscale">
-                    <Sparkles className="w-5 h-5" />
-                    <MessageCircle className="w-5 h-5" />
-                    <Heart className="w-5 h-5" />
-                </div>
-            </footer>
         </main>
     );
 }
