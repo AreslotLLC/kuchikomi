@@ -119,7 +119,7 @@ export function SurveyForm({ client, onSubmit, isSubmitting }: SurveyFormProps) 
                                             <span className="ml-2 sm:ml-3 text-[10px] sm:text-xs font-bold text-gray-400 bg-gray-100 px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-lg uppercase tracking-wider">任意</span>
                                         )}
                                     </label>
-                                    {(q.type === 'tags' || q.type === 'boolean') && (
+                                    {(q.type === 'tags' || q.type === 'boolean') && q.id !== 'gender' && q.id !== 'age' && (
                                         <span className="text-[10px] sm:text-xs font-bold text-gray-400 flex items-center gap-1.5 uppercase tracking-widest pl-0.5">
                                             {isMultiple ? (
                                                 <><Square className="w-3 h-3" /> 複数選択可</>
@@ -224,7 +224,7 @@ export function SurveyForm({ client, onSubmit, isSubmitting }: SurveyFormProps) 
 
                                 {q.type === 'text' && (
                                     <textarea
-                                        className="w-full p-4 sm:p-5 rounded-[1.5rem] sm:rounded-[2rem] border-2 border-gray-50 bg-gray-50 focus:bg-white focus:border-[var(--primary)] focus:ring-0 min-h-[140px] sm:min-h-[160px] transition-all resize-none text-gray-700 text-sm sm:text-lg leading-relaxed outline-none"
+                                        className="w-full p-4 sm:p-5 rounded-[1.5rem] sm:rounded-[2rem] border-2 border-gray-200 bg-white focus:bg-white focus:border-[var(--primary)] focus:ring-0 min-h-[140px] sm:min-h-[160px] transition-all shadow-inner resize-none text-gray-700 text-sm sm:text-lg leading-relaxed outline-none"
                                         placeholder="こちらにご入力ください（任意）"
                                         value={answers[q.id] || ''}
                                         onChange={(e) => handleTextChange(q.id, e.target.value)}
